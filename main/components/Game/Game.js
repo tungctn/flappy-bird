@@ -7,20 +7,32 @@ import Background from '../Background/Background'
 import Bird from '../Bird/Bird'
 import Notification from '../Notification/Notification'
 import Pipe from '../Pipe/Pipe'
+import { Howl, Howler } from 'howler'
+import useSound from 'use-sound'
 
 const Game = () => {
 
-    const { state, dispatch, info, setInfo } = useContext(AppContext)
+
+    const { state, dispatch } = useContext(AppContext)
     const [isPlay, setIsPlay] = useState(false)
     const [isLose, setIsLose] = useState()
     const [point, setPoint] = useState(1)
     const [nameInput, setNameInput] = useState('')
     const router = useRouter()
+    const SoundPlay = (src) => {
+        const sound = new Howl({ src })
+        sound.play()
+    }
     useEffect(() => {
         if (state.y >= 675 || state.y === 0) {
             setIsLose(true)
         }
     }, [state.y])
+
+    useEffect(() => {
+        SoundPlay('/bgmusic.mp3')
+        Howler.volume(0.05)
+    })
 
     useEffect(() => {
         const handleKeyPress = (e) => {

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->string('score')->default('0');
+            $table->timestamps();
         });
     }
 
