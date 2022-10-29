@@ -19,8 +19,13 @@ const Game = () => {
     const [point, setPoint] = useState(1)
     const [nameInput, setNameInput] = useState('')
     const router = useRouter()
-    const SoundPlay = (src) => {
-        const sound = new Howl({ src })
+    const SoundPlay = () => {
+        const sound = new Howl({ src: '/bgmusic.mp3', loop: true, volume: 0.03 })
+        sound.play()
+    }
+
+    const SoundOver = () => {
+        const sound = new Howl({ src: '/space.mp3', volume: 0.1 })
         sound.play()
     }
     useEffect(() => {
@@ -30,9 +35,8 @@ const Game = () => {
     }, [state.y])
 
     useEffect(() => {
-        SoundPlay('/bgmusic.mp3')
-        Howler.volume(0.05)
-    })
+        SoundPlay()
+    }, [])
 
     useEffect(() => {
         const handleKeyPress = (e) => {
@@ -70,6 +74,12 @@ const Game = () => {
 
     }, [state.pipes, isLose])
 
+    useEffect(() => {
+        if (isLose) {
+            SoundOver()
+        }
+    }, [isLose])
+
     return (
         <div
             style={{
@@ -96,13 +106,12 @@ const Game = () => {
             {!isLose && state.pipes.map((pipe, index) => {
                 const scope1 = state.pipes[index] + 300 //355
                 const scope2 = scope1 + 60   //415
-                if ((state.left[index] <= 170 && state.left[index] > 0) && (state.y < scope1 || state.y > scope2)) { // 364 < 355 || 364 > 415
+                if ((state.left[index] < 170 && state.left[index] > 0) && (state.y < scope1 || state.y > scope2)) { // 364 < 355 || 364 > 415
                     setIsLose(true)
                     setPoint((prev) => {
                         return prev - 1
                     })
                     saveScore({ username: nameInput, score: (point - 1).toString() })
-
                 }
 
                 return (
