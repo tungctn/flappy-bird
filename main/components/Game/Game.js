@@ -20,7 +20,7 @@ const Game = () => {
     const [nameInput, setNameInput] = useState('')
     const router = useRouter()
     const SoundPlay = () => {
-        const sound = new Howl({ src: '/bgmusic.mp3', loop: true, volume: 0.03 })
+        const sound = new Howl({ src: '/bgmusic.mp3', loop: true, volume: 0.1 })
         sound.play()
     }
 
@@ -28,6 +28,12 @@ const Game = () => {
         const sound = new Howl({ src: '/space.mp3', volume: 0.1 })
         sound.play()
     }
+
+    const SoundScore = () => {
+        const sound = new Howl({ src: '/score.mp3', volume: 0.5 })
+        sound.play()
+    }
+
     useEffect(() => {
         if (state.y >= 675 || state.y === 0) {
             setIsLose(true)
@@ -69,8 +75,9 @@ const Game = () => {
     useEffect(() => {
         if (!isLose) {
             setPoint(state.pipes.length)
-
+            SoundScore()
         }
+
 
     }, [state.pipes, isLose])
 
@@ -181,6 +188,7 @@ const Game = () => {
                 setRestart={setIsPlay}
                 isPlay={isPlay}
                 setName={setNameInput}
+                name={nameInput}
             />}
 
         </div>

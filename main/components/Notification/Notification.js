@@ -1,12 +1,21 @@
 import antd, { Button, Col, Row } from 'antd'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 
 const Notification = (props) => {
     // const { Col, Row } = antd;
     const router = useRouter()
-    const { info, setInfo } = useContext(AppContext)
+    const [isError, setIsError] = useState(false)
+
+    useEffect(() => {
+        if (props.name && props.name.length === 0) {
+            setIsError(true)
+        } else {
+            setIsError(false)
+        }
+    }, [props.name])
+
     return (
         <div
             style={props.style}
@@ -89,9 +98,31 @@ const Notification = (props) => {
                                 placeholder="Your name"
                                 required
                                 onChange={(e) => {
+                                    if (e.target.value.length === 0) {
+                                        setIsError(true)
+                                    }
                                     props.setName(e.target.value)
                                 }}
                             />
+                            {(isError) &&
+                                (
+                                    <p
+                                        style={{
+                                            color: 'red',
+                                            fontSize: 16,
+                                            position: 'absolute',
+                                            fontFamily: 'sans-serif',
+                                            textAlign: 'center',
+                                            width: 150,
+                                            left: 87,
+                                            top: 75
+                                        }}
+                                    >
+                                        Ban chua nhap ten!
+                                    </p>
+                                )
+                            }
+
                             <button
                                 style={{
                                     position: 'absolute',
@@ -106,7 +137,12 @@ const Notification = (props) => {
                                     borderRadius: 20
                                 }}
                                 onClick={() => {
-                                    props.setRestart(true)
+                                    if (props.name && props.name.length !== 0) {
+                                        props.setRestart(true)
+                                    } else {
+                                        setIsError(true)
+                                    }
+
                                 }}
                             >
                                 <div
